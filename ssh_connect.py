@@ -2,15 +2,19 @@ import paramiko
 import getpass
 import telnetlib
 from ftplib import FTP
+import sys
 
-def sshconnect():
 
+def sshinput():
     IpAddress = input("Enter the ip address:")
     user = input("Enter the username:")
     passwrd = input("Enter the password:")
     port = 22
     command = input("Enter your command:")
 
+    sshconnect(IpAddress, port, user, passwrd, command)
+
+def sshconnect(IpAddress, port, user, passwrd, command):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(IpAddress, port, user, passwrd)
@@ -49,14 +53,28 @@ def ftpconnect():
     # visit https://docs.python.org/3/library/ftplib.html for further commands
 
 if __name__ == "__main__":
-    print("\n Please select a option: \n 1. SSH \n 2. Telnet \n 3. FTP")
-    option = int(input("Option:"))
-    if option == 1:
-        sshconnect()
-    elif option == 2:
-        telnetconnect()
-    elif option == 3:
-        ftpconnect()
+    # if there's passed arguments, parse them
+    if len(sys.argv) > 1:
+        # only ssh is supported in this format
+        if sys.argv[1] == "ssh":
+            IpAddress = sys.argv[2]
+            port = sys.argv[3]
+            user = sys.argv[4]
+            passwrd = sys.argv[5]
+            command = sys.argv[6]
+
+            sshconnect(IpAddress, port, user, passwrd, command)
+        else:
+            print("Please use other method for telnet")
     else:
-        print("Wrong option, terminating")
+        print("\n Please select a option: \n 1. SSH \n 2. Telnet \n 3. FTP")
+        option = int(input("Option:"))
+        if option == 1:
+            sshinput()
+        elif option == 2:
+            telnetconnect()
+        elif option == 3:
+            ftpconnect()
+        else:
+            print("Wrong option, terminating")
 
