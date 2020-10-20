@@ -1,6 +1,7 @@
 import paramiko
 import getpass
 import telnetlib
+from ftplib import FTP
 
 def sshconnect():
 
@@ -38,14 +39,24 @@ def telnetconnect():
     tn.write(b"exit\n")
     print(tn.read_all().decode('ascii'))
 
+def ftpconnect():
+    ipadd = input("Enter IP address:")
+    user = input("Enter the username:")
+    passwrd = input("Enter the password:")
+    ftp = FTP(ipadd)
+    ftp.login(user, passwrd)
+    # add your commands here this is a basic FTP connection you can add your own commands after this
+    # visit https://docs.python.org/3/library/ftplib.html for further commands
 
 if __name__ == "__main__":
-    print("\n Please select a option: \n 1. SSH \n 2. Telnet")
+    print("\n Please select a option: \n 1. SSH \n 2. Telnet \n 3. FTP")
     option = int(input("Option:"))
     if option == 1:
         sshconnect()
     elif option == 2:
         telnetconnect()
+    elif option == 3:
+        ftpconnect()
     else:
         print("Wrong option, terminating")
 
